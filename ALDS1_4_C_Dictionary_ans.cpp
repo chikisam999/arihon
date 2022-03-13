@@ -27,6 +27,8 @@ long long getKey(char str[]){
 }
 
 int h1(int key) { return key % M; }
+// h2が0になると、hは更新されずに無限ループになる。
+// よってh2 != 0を保障する必要があるために、1を足している。
 int h2(int key) { return 1 + (key % (M-1)); }
 
 int find(char str[]){
@@ -34,6 +36,7 @@ int find(char str[]){
     key = getKey(str); // 文字列を数値に変換
     for ( i = 0;; i++){
         h = (h1(key) + i * h2(key)) % M;
+        // strcmp関数は引数1,2が文字列として一致した場合にreturn 0 となる。
         if( strcmp(H[h], str) == 0) return 1;
         else if ( strlen(H[h]) == 0) return 0;
     }
@@ -46,6 +49,7 @@ int insert(char str[]){
     for( i = 0; ; i++){
         h = (h1(key) + i * h2(key)) % M;
         if( strcmp(H[h], str) == 0) return 1;
+        // keyとして生成したh番目が空いているときだけ、マップに挿入できる。
         else if(strlen(H[h]) == 0) {
             strcpy(H[h], str);
             return 0;
